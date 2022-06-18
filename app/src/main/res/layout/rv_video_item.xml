@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:padding="10dp"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ivPlay"
+            android:src="@drawable/ic_play"
+            app:tint="@color/teal_200"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="blur blur blur"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tvVideoName"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/ivPlay"
+            app:layout_constraintTop_toTopOf="@id/ivPlay"
+            app:layout_constraintBottom_toTopOf="@id/ivPlay"
+            app:layout_constraintEnd_toStartOf="@id/ivDownload"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="00:02:30"
+            android:textSize="12sp"
+            android:id="@+id/tvVideoTime"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintStart_toEndOf="@id/ivPlay"
+            app:layout_constraintTop_toBottomOf="@id/tvVideoName"
+            />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/ivDownload"
+            android:src="@drawable/ic_file_download"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tint="@color/teal_200" />
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/progressBar"
+            android:indeterminate="false"
+            app:tint="@color/teal_200"
+            android:max="100"
+            android:progress="1"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"
+            android:padding="5dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

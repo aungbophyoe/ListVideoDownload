@@ -39,7 +39,7 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation("androidx.core:core-ktx:1.8.0")
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -60,8 +60,13 @@ dependencies {
     implementation("com.google.dagger:hilt-android:$hilt_version")
     kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
 
-    def hilt_viewmodels = "1.0.0-alpha03"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_viewmodels"
+    implementation("androidx.fragment:fragment-ktx:1.4.1")
+
+    /*def hilt_viewmodels = "1.0.0-alpha03"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_viewmodels"*/
+
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
 
