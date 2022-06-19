@@ -5,4 +5,5 @@ object Constants {
     const val NOTIFICATION_CHANNEL_ID = "ListVideo Download Channel ID"
     const val NOTIFICATION_CHANNEL_NAME = "ListVideo Download Channel"
     const val NOTIFICATION_ID = 1500
+    const val START_DOWNLOAD = "start_download"
 }

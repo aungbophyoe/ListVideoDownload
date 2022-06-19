@@ -18,7 +18,10 @@ import com.aungbophyoe.space.listvideodownload.R
 import com.aungbophyoe.space.listvideodownload.databinding.ActivityMainBinding
 import com.aungbophyoe.space.listvideodownload.model.Video
 import com.aungbophyoe.space.listvideodownload.recycleradapter.VideoListRecyclerAdapter
+import com.aungbophyoe.space.listvideodownload.service.DownloadService
+import com.aungbophyoe.space.listvideodownload.utility.Constants
 import com.aungbophyoe.space.listvideodownload.utility.Constants.REQUEST_STORAGE_READ_WRITE_PERMISSION
+import com.aungbophyoe.space.listvideodownload.utility.DownloadEvent
 import com.aungbophyoe.space.listvideodownload.utility.Utility
 import com.aungbophyoe.space.listvideodownload.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity(),EasyPermissions.PermissionCallbacks,Vid
     private val videoListRecyclerAdapter  by lazy {
         VideoListRecyclerAdapter(this,this)
     }
+    private var videoList : ArrayList<Video> = arrayListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
@@ -47,6 +51,7 @@ class MainActivity : AppCompatActivity(),EasyPermissions.PermissionCallbacks,Vid
             viewModel.getVideoList()
         }
         observeData()
+        requestPermission()
     }
 
     private fun observeData(){
@@ -54,7 +59,25 @@ class MainActivity : AppCompatActivity(),EasyPermissions.PermissionCallbacks,Vid
             binding!!.apply {
                 lifecycleScope.launchWhenStarted {
                     viewModel.videoList.collectLatest {
-                        videoListRecyclerAdapter.submitList(it)
+                        videoList.clear()
+                        videoList.addAll(it)
+                        videoListRecyclerAdapter.submitList(videoList)
+                        recyclerView.adapter?.notifyDataSetChanged()
+                    }
+                }
+
+                DownloadService.downloadVideoList.observe(this@MainActivity){
+                    it?.let { video ->
+                        videoList.forEach { v ->
+                            if(v.id == video.id){
+                                v.progress = video.progress
+                                v.status = video.status
+                                if(video.progress==100){
+                                    v.status = Video.DownloadStatus.Downloaded
+                                }
+                            }
+                        }
+                        videoListRecyclerAdapter.submitList(videoList)
                         recyclerView.adapter?.notifyDataSetChanged()
                     }
                 }
@@ -102,5 +125,11 @@ class MainActivity : AppCompatActivity(),EasyPermissions.PermissionCallbacks,Vid
 
     override fun onDownload(video: Video) {
         Log.d("download","${video.id}")
+        startService(
+            Intent(this,DownloadService::class.java).apply {
+                this.action = Constants.START_DOWNLOAD
+                this.putExtra("video",video)
+            }
+        )
     }
 }

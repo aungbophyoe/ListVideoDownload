@@ -57,6 +57,20 @@ class VideoListRecyclerAdapter(private val context: Context,private val download
             val video = currentList[position]
             holder.tvVideoName.text = video.name
             holder.tvVideoTime.text = video.time
+            when(video.status){
+                Video.DownloadStatus.Downloaded -> {
+                    holder.ivDownload.isEnabled = false
+                    holder.progressBar.progress = 100
+                    holder.progressBar.visibility = View.GONE
+                    holder.ivDownload.visibility = View.GONE
+                }
+                Video.DownloadStatus.Downloading -> {
+                    holder.ivDownload.isEnabled = false
+                    holder.progressBar.visibility = View.VISIBLE
+                    holder.progressBar.progress = video.progress
+                }
+                Video.DownloadStatus.Download ->{}
+            }
         }catch (e:Exception){
             Log.d("onBind","${e.message}")
         }

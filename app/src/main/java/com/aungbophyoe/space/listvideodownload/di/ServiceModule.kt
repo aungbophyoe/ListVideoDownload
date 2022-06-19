@@ -11,11 +11,13 @@ import com.aungbophyoe.space.listvideodownload.view.MainActivity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 
+
 @Module
-@InstallIn(ServiceModule::class)
+@InstallIn(ServiceComponent::class)
 object ServiceModule {
     @ServiceScoped
     @Provides
@@ -35,9 +37,10 @@ object ServiceModule {
     fun provideNotificationBuilder(@ApplicationContext context: Context,pendingIntent: PendingIntent): NotificationCompat.Builder{
         return NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
             .setOngoing(true)
+            .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("Download in progress")
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setProgress(100,0,false)
             .setContentIntent(pendingIntent)
     }
