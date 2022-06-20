@@ -33,6 +33,7 @@ class VideoListRecyclerAdapter(private val context: Context,private val download
         val tvVideoTime : TextView = view.findViewById(R.id.tvVideoTime)
         val ivDownload : ImageView = view.findViewById(R.id.ivDownload)
         val progressBar : ProgressBar = view.findViewById(R.id.progressBar)
+        val ivDownloaded : ImageView = view.findViewById(R.id.ivDownloaded)
     }
 
     interface DownloadClickListener{
@@ -63,11 +64,13 @@ class VideoListRecyclerAdapter(private val context: Context,private val download
                     holder.progressBar.progress = 100
                     holder.progressBar.visibility = View.GONE
                     holder.ivDownload.visibility = View.GONE
+                    holder.ivDownloaded.visibility = View.VISIBLE
                 }
                 Video.DownloadStatus.Downloading -> {
                     holder.ivDownload.isEnabled = false
                     holder.progressBar.visibility = View.VISIBLE
                     holder.progressBar.progress = video.progress
+                    holder.ivDownloaded.visibility = View.GONE
                 }
                 Video.DownloadStatus.Download ->{}
             }

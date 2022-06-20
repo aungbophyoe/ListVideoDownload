@@ -16,8 +16,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aungbophyoe.space.listvideodownload.R
 import com.aungbophyoe.space.listvideodownload.databinding.ActivityMainBinding
+import com.aungbophyoe.space.listvideodownload.mapper.CacheMapper
 import com.aungbophyoe.space.listvideodownload.model.Video
 import com.aungbophyoe.space.listvideodownload.recycleradapter.VideoListRecyclerAdapter
+import com.aungbophyoe.space.listvideodownload.room.VideoDAO
 import com.aungbophyoe.space.listvideodownload.service.DownloadService
 import com.aungbophyoe.space.listvideodownload.utility.Constants
 import com.aungbophyoe.space.listvideodownload.utility.Constants.REQUEST_STORAGE_READ_WRITE_PERMISSION
@@ -26,16 +28,22 @@ import com.aungbophyoe.space.listvideodownload.utility.Utility
 import com.aungbophyoe.space.listvideodownload.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(),EasyPermissions.PermissionCallbacks,VideoListRecyclerAdapter.DownloadClickListener {
+open class MainActivity : AppCompatActivity(),EasyPermissions.PermissionCallbacks,VideoListRecyclerAdapter.DownloadClickListener {
     private var _binding : ActivityMainBinding? = null
     private val binding get() = _binding
+    @Inject
+    lateinit var videoDAO: VideoDAO
+    @Inject
+    lateinit var cacheMapper: CacheMapper
     private val viewModel : MainViewModel by viewModels()
     private val videoListRecyclerAdapter  by lazy {
         VideoListRecyclerAdapter(this,this)
@@ -61,6 +69,21 @@ class MainActivity : AppCompatActivity(),EasyPermissions.PermissionCallbacks,Vid
                     viewModel.videoList.collectLatest {
                         videoList.clear()
                         videoList.addAll(it)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val entityList = videoDAO.getOfflineVideoList()
+                            entityList.forEach { videoCacheEntity ->
+                                Log.d("activity","## ${videoCacheEntity.downloaded} ##")
+                            }
+                            val list = cacheMapper.mapFromEntityList(entityList)
+                            list.forEach { v->
+                                Log.d("activity","${v.status} #")
+                                it.forEach { origin->
+                                    if(origin.id == v.id){
+                                        origin.status = v.status
+                                    }
+                                }
+                            }
+                        }
                         videoListRecyclerAdapter.submitList(videoList)
                         recyclerView.adapter?.notifyDataSetChanged()
                     }

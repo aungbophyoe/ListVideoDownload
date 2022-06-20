@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.aungbophyoe.space.listvideodownload.R
+import com.aungbophyoe.space.listvideodownload.mapper.CacheMapper
+import com.aungbophyoe.space.listvideodownload.room.VideoDAO
 import com.aungbophyoe.space.listvideodownload.utility.Constants
 import com.aungbophyoe.space.listvideodownload.view.MainActivity
 import dagger.Module

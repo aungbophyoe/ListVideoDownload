@@ -17,11 +17,11 @@ class CacheMapper @Inject constructor() : EntityMapper<VideoCacheEntity,Video> {
         return entities.map { mapFromEntity(it) }
     }
 
-    fun getEntityStatus(video: Video):Boolean{
+    private fun getEntityStatus(video: Video):Boolean{
         return video.status==Video.DownloadStatus.Downloaded
     }
 
-    fun getVideoStatus(entity: VideoCacheEntity):Video.DownloadStatus{
+    private fun getVideoStatus(entity: VideoCacheEntity):Video.DownloadStatus{
         return if(entity.downloaded){
             Video.DownloadStatus.Downloaded
         }else{

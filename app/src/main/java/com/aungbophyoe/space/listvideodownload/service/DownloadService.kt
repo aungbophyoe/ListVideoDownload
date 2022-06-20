@@ -12,16 +12,15 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
+import com.aungbophyoe.space.listvideodownload.mapper.CacheMapper
 import com.aungbophyoe.space.listvideodownload.model.Video
+import com.aungbophyoe.space.listvideodownload.room.VideoDAO
 import com.aungbophyoe.space.listvideodownload.utility.Constants
 import com.aungbophyoe.space.listvideodownload.utility.Constants.START_DOWNLOAD
 import com.aungbophyoe.space.listvideodownload.utility.DownloadEvent
 import com.aungbophyoe.space.listvideodownload.utility.Utility
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.*
 import javax.inject.Inject
 import java.net.URL
@@ -32,6 +31,10 @@ class DownloadService : LifecycleService()  {
     lateinit var notificationManager: NotificationManager
     @Inject
     lateinit var notificationBuilder: NotificationCompat.Builder
+    @Inject
+    lateinit var videoDAO: VideoDAO
+    @Inject
+    lateinit var cacheMapper: CacheMapper
     private val DOWNLOAD_NOTI_EVERY_PERCENT = 5
     private val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
     companion object{
@@ -64,6 +67,10 @@ class DownloadService : LifecycleService()  {
         val currentVideo = downloadVideoList.value
         currentVideo?.status = Video.DownloadStatus.Downloading
         downloadVideoList.value = currentVideo!!
+        val videoEntity = cacheMapper.mapToEntity(currentVideo)
+        CoroutineScope(Dispatchers.IO).launch{
+            videoDAO.insertAll(videoEntity)
+        }
         startDownload()
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             createNotificationChannel()
@@ -127,6 +134,14 @@ class DownloadService : LifecycleService()  {
                         if (progress - prevProgress == DOWNLOAD_NOTI_EVERY_PERCENT) {
                             currentVideo!!.progress = progress
                             downloadVideoList.value = currentVideo!!
+                            if(progress==100){
+                                currentVideo.status = Video.DownloadStatus.Downloaded
+                                val videoEntity = cacheMapper.mapToEntity(currentVideo)
+                                CoroutineScope(Dispatchers.IO).launch{
+                                    Log.d("service","${videoEntity.downloaded}")
+                                    videoDAO.insertAll(videoEntity)
+                                }
+                            }
                             Log.d("service","${progress}")
                             prevProgress = progress
                         }

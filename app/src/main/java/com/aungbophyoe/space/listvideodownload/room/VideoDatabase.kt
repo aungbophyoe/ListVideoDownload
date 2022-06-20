@@ -3,7 +3,7 @@ package com.aungbophyoe.space.listvideodownload.room
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [VideoCacheEntity::class], version = 1)
+@Database(entities = [VideoCacheEntity::class], version = 1, exportSchema = false)
 abstract class VideoDatabase:RoomDatabase() {
     companion object{
         const val DatabaseName  : String = "photo_database"

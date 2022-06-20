@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/ivPlay"
             android:src="@drawable/ic_play"
-            app:tint="@color/teal_200"
+            app:tint="@color/primaryIcon"
             android:layout_marginLeft="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -58,7 +58,20 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:tint="@color/teal_200" />
+            app:tint="@color/primaryIcon" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:layout_marginRight="10dp"
+            android:id="@+id/ivDownloaded"
+            android:src="@drawable/ic_check"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:tint="@color/primaryIcon" />
 
         <ProgressBar
             android:layout_width="match_parent"
@@ -68,7 +81,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/progressBar"
             android:indeterminate="false"
-            app:tint="@color/teal_200"
+            app:tint="@color/primaryIcon"
             android:max="100"
             android:progress="1"
             android:layout_gravity="center_vertical"
